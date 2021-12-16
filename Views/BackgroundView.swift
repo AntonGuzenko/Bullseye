@@ -9,18 +9,17 @@ import SwiftUI
 
 struct BackgroundView: View {
     @Binding var game: Game
-
+    
     
     var body: some View {
         VStack {
             TopView(game: $game)
-            Spacer() 
+            Spacer()
             BotttomView(game: $game)
         }
         .padding()
         .background(
-        Color("BackgroundColor")
-            .edgesIgnoringSafeArea(.all)
+            RingsView()
         )
     }
 }
@@ -28,13 +27,17 @@ struct BackgroundView: View {
 
 struct TopView: View {
     @Binding var game: Game
-
+    
     
     var body: some View {
         HStack{
-          RoundedImageVievStroked(systemName: "arrow.counterclockwise")
+            Button(action:{
+                game.restart()
+            }) {
+                RoundedImageVievStroked(systemName: "arrow.counterclockwise")
+            }
             Spacer()
-          RoundedImageVievFilled(systemName: "list.dash")
+            RoundedImageVievFilled(systemName: "list.dash")
         }
     }
 }
@@ -53,7 +56,7 @@ struct NumberView: View {
 
 struct BotttomView: View {
     @Binding var game: Game
-
+    
     
     var body: some View {
         HStack{
@@ -63,6 +66,27 @@ struct BotttomView: View {
         }
     }
 }
+
+struct RingsView: View {
+    
+    @Environment(\.colorScheme) var colorShame
+    
+    var body: some View{
+        ZStack{
+            Color("BackgroundColor")
+                .edgesIgnoringSafeArea(.all)
+            ForEach(1..<6) { ring in
+                let size = CGFloat(ring * 100)
+                let opasity = colorShame == .dark ? 0.5 : 0.3
+            Circle()
+                .stroke(lineWidth: 20.0)
+                .fill(RadialGradient(gradient: Gradient(colors: [Color("RingsColor ").opacity(opasity), Color("RingsColor").opacity(opasity)]), center:.center, startRadius: 50, endRadius: 300))
+                .frame(width: size, height: size)
+            }
+        }
+    }
+}
+
 
 struct BackgroundView_Previews: PreviewProvider {
     static var previews: some View {

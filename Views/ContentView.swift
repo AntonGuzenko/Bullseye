@@ -19,9 +19,10 @@ struct ContentView: View {
             .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
             VStack {
               InstructionsView(game: $game)
-              SliderView(sliderValue: $sliderValue)
+                    .padding(.bottom, 100)
               HitMeButton(alertIsVisible: $alertIsVisible, sliderValue: $sliderValue, game: $game)
        }
+            SliderView(sliderValue: $sliderValue)
     }
             
   }
@@ -64,8 +65,8 @@ struct HitMeButton: View {
     
     var body: some View{
         Button(action: {
-            print("hello Anton")
             alertIsVisible = true
+            
         }) {
             Text("Hit me".uppercased())
             .bold()
@@ -86,8 +87,10 @@ struct HitMeButton: View {
         )
         .alert(isPresented: $alertIsVisible) {
             let roundedValue = Int(sliderValue.rounded())
-            
-            return Alert(title: Text("Hello, there"), message: Text("The slider's value is \(roundedValue).\n" + "You scored \(game.points(sliderValue: roundedValue)) points"), dismissButton: .default(Text("Awesome!")))
+            let points = game.points(sliderValue: roundedValue)
+            return Alert(title: Text("Hello, there"), message: Text("The slider's value is \(roundedValue).\n" + "You scored \(points) points"), dismissButton: .default(Text("Awesome!")) {
+                game.startNewRound(points: points)
+            })
         }
     }
 }
