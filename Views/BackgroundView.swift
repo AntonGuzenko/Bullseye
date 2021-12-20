@@ -11,6 +11,7 @@ struct BackgroundView: View {
     @Binding var game: Game
     
     
+    
     var body: some View {
         VStack {
             TopView(game: $game)
@@ -27,6 +28,7 @@ struct BackgroundView: View {
 
 struct TopView: View {
     @Binding var game: Game
+    @State private var leaderboardIsSHowing = false
     
     
     var body: some View {
@@ -37,7 +39,14 @@ struct TopView: View {
                 RoundedImageVievStroked(systemName: "arrow.counterclockwise")
             }
             Spacer()
+            Button(action:{
+                leaderboardIsSHowing = true
+            }) {
             RoundedImageVievFilled(systemName: "list.dash")
+            }.sheet(isPresented: $leaderboardIsSHowing, onDismiss: {}, content: {
+                LeaderboardView(leaderboardIsShowing: $leaderboardIsSHowing, game: $game)
+                
+            })
         }
     }
 }
@@ -75,12 +84,12 @@ struct RingsView: View {
         ZStack{
             Color("BackgroundColor")
                 .edgesIgnoringSafeArea(.all)
-            ForEach(1..<6) { ring in
+            ForEach(1..<10) { ring in
                 let size = CGFloat(ring * 100)
-                let opasity = colorShame == .dark ? 0.5 : 0.3
+                let opasity = colorShame == .dark ? 0.6 : 0.3
             Circle()
                 .stroke(lineWidth: 20.0)
-                .fill(RadialGradient(gradient: Gradient(colors: [Color("RingsColor ").opacity(opasity), Color("RingsColor").opacity(opasity)]), center:.center, startRadius: 50, endRadius: 300))
+                .fill(RadialGradient(gradient: Gradient(colors: [Color("RingsColor ").opacity(opasity), Color("RingsColor").opacity(opasity)]), center:.center, startRadius: 25, endRadius: 300))
                 .frame(width: size, height: size)
             }
         }
